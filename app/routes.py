@@ -2,7 +2,7 @@
 # import the app object we made
 
 from app import app
-from flask import render_template, request
+from flask import flash, render_template, request
 from flask_login import login_required
 from .forms import currentRatesForm, historicalRatesForm, DATE_FORMAT
 
@@ -36,8 +36,8 @@ def current():
         if form.rate.data:
             rates = get_current_rates(form)
         else:
-            # TODO: show a message to user
-            rates = []
+            flash('Select one or more Rate Currency(s)', category='danger')
+            rates = {}
             
 
     return render_template('current.html', form=form, rates=rates) # GET
