@@ -2,6 +2,7 @@
 # import the app object we made
 
 from app import app
+import datetime as dt
 from flask import flash, render_template, request
 from flask_login import login_required
 from .forms import currentRatesForm, historicalRatesForm, DATE_FORMAT
@@ -10,6 +11,15 @@ from .forms import currentRatesForm, historicalRatesForm, DATE_FORMAT
 @login_required
 def historical():
     form = historicalRatesForm() # used by both GET and POST
+    if form.base.data is None:
+        form.base.data = 'USD'
+    if form.rate.data is None:
+        form.rate.data = 'GBP'
+    if form.date_from.data is None:
+        form.date_from.data = dt.date.today() - dt.timedelta(days=30)
+    if form.date_to.data is None:
+        form.date_to.data = dt.date.today()
+
     rates = []
     dates = []
     symbols = get_symbols()
@@ -26,6 +36,11 @@ def historical():
 @login_required
 def current():
     form = currentRatesForm() # used by both GET and POST
+    if form.base.data is None:
+        form.base.data = 'USD'
+    if form.rate.data is None:
+        form.rate.data = ['GBP', 'EUR']
+
     rates = {}
     symbols = get_symbols()
     form.base.choices = symbols
