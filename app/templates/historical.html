@@ -1,0 +1,77 @@
+{% extends 'components/layout.html' %}
+
+{% block title %}Historical Rates{% endblock title %}
+
+{% block content %}
+<div class="row justify-content-center mt-2">
+    <div class="col-9">
+        <h3>Historical Rates:</h3>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                <fieldset id="base-field">
+                    {{ form.base.label }}
+                    {{ form.base(class="form-control", placeholder="Base...") }}
+                </fieldset>
+                <fieldset id="rate-field">
+                    {{ form.rate.label }}
+                    {{ form.rate(class="form-control", placeholder="Rate...") }}
+                </fieldset>
+                <fieldset id="date_from-field">
+                    {{ form.date_from.label }}
+                    {{ form.date_from(class="form-control", placeholder="From...") }}
+                </fieldset>
+                <fieldset id="date_to-field">
+                    {{ form.date_to.label }}
+                    {{ form.date_to(class="form-control", placeholder="To...") }}
+                </fieldset>
+                <br>
+                {{ form.submit(class="btn btn-block btn-info") }}
+            </div>
+        </form>
+        <canvas id="lineChart" width="900" height="400"></canvas>
+        <script>
+            var ctx = document.getElementById("lineChart").getContext("2d");
+            var lineChart = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: {{ dates | safe }},
+                    datasets: [
+                        {
+                            label: "Data points",
+                            data: {{ rates | safe }},
+                            fill: false,
+                            borderColor: "rgb(75, 192, 192)",
+                            lineTension: 0.1
+                        }
+                    ]
+                },
+                option: {
+                    responsive: false
+                }
+            });
+        </script>
+        </div>
+</div>
+
+<!-- <form class ="grid" action ="/result" method="POST">
+    <select class="form-select" aria-label="Default select example">
+        {% for s in symbol %}
+            <option value={{ s }} id="base">Base: {{ s }}</option>
+        {% endfor %}
+    </select>
+    <select class="form-select" aria-label="Default select example">
+        {% for s in symbol %}
+            <option value={{ s }} id="rate">Rate: {{ s }}</option>
+        {% endfor %}
+    </select>
+    <select class="form-select" aria-label="Default select example">
+        {% for x in range(101) %}
+        <option value={{ x }} id="years">Last {{ x }} Years</option>
+        {% endfor %}
+    </select>
+    <br>
+    {{ form.submit(class="btn btn-block btn-info") }}    
+</form>  -->
+
+{% endblock content %}
